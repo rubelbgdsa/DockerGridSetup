@@ -1,26 +1,24 @@
-public void processPermissionList() {
-    List<EnvParams> permissionEnv = getPermissionEnv();
+import java.util.List;
+import java.util.stream.Collectors;
 
-    for (EnvParams params : permissionEnv) {
-        String envName = params.getEnvName().toString().toUpperCase();
-        System.out.println("Processing environment: " + envName);
-
-        EnvironmentPermissions permissions = getPermissionList();
-        // Use the 'permissions' object for further processing
-        // ...
-
-        System.out.println("EnvironmentPermissions object: " + permissions);
-    }
+public List<EnvironmentPermissions> getPermissionList() {
+    return getPermissionEnv().stream()
+            .map(params -> {
+                String envName = params.getEnvName().toString().toUpperCase();
+                System.out.println("getPermissionList === " + envName);
+                return nonProdPermission(envName);
+            })
+            .collect(Collectors.toList());
 }
 
-public EnvironmentPermissions getPermissionList() {
-    for (EnvParams params : getPermissionEnv()) {
-        String envName = params.getEnvName().toString().toUpperCase();
-        System.out.println("getPermissionList === " + envName);
-        EnvironmentPermissions permissions = nonProdPermission(envName);
-        return permissions;
-    }
-
-    // Return a default or null value if necessary
-    return null;
+    
+    
+List<EnvironmentPermissions> permissionsList = getPermissionList();
+for (EnvironmentPermissions permissions : permissionsList) {
+    // Handle each EnvironmentPermissions object
 }
+
+    
+    
+List<EnvironmentPermissions> permissionList = planspec.getPermissionList();
+Bambooserver.publish(permissionList);
