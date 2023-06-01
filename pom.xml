@@ -1,9 +1,26 @@
-public EnvironmentPermissions getPermission() {
-    Iterator<EnvParams> iterator = getPermissionEnv().iterator();
-    if (iterator.hasNext()) {
-        EnvParams params = iterator.next();
-        String envName = params.getEnvName().toString();
-        return nonProdPermission(envName);
+public void processPermissionList() {
+    List<EnvParams> permissionEnv = getPermissionEnv();
+
+    for (EnvParams params : permissionEnv) {
+        String envName = params.getEnvName().toString().toUpperCase();
+        System.out.println("Processing environment: " + envName);
+
+        EnvironmentPermissions permissions = getPermissionList();
+        // Use the 'permissions' object for further processing
+        // ...
+
+        System.out.println("EnvironmentPermissions object: " + permissions);
     }
-    return null; // Return null if there are no more permissions
+}
+
+public EnvironmentPermissions getPermissionList() {
+    for (EnvParams params : getPermissionEnv()) {
+        String envName = params.getEnvName().toString().toUpperCase();
+        System.out.println("getPermissionList === " + envName);
+        EnvironmentPermissions permissions = nonProdPermission(envName);
+        return permissions;
+    }
+
+    // Return a default or null value if necessary
+    return null;
 }
