@@ -1,11 +1,9 @@
-public Iterator<EnvironmentPermissions> getPermissionList() {
-    List<EnvironmentPermissions> permissionList = new ArrayList<>();
-
-    for (EnvParams params : getPermissionEnv()) {
+public EnvironmentPermissions getPermission() {
+    Iterator<EnvParams> iterator = getPermissionEnv().iterator();
+    if (iterator.hasNext()) {
+        EnvParams params = iterator.next();
         String envName = params.getEnvName().toString();
-        EnvironmentPermissions permissions = nonProdPermission(envName);
-        permissionList.add(permissions);
+        return nonProdPermission(envName);
     }
-
-    return permissionList.iterator();
+    return null; // Return null if there are no more permissions
 }
