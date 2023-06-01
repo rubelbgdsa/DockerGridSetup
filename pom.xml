@@ -1,9 +1,11 @@
-SET PACKAGEVER=%bamboo.inject.BuildDay%.%bamboo.inject.BuildTime%.%bamboo_buildNumber%
-dotnet publish --configuration Release --source https://nuget.schwab.com/nuget/Default/ --output ${bamboo.build.working.directory}/publish
-if (${bamboo.planRepository.1.branchName}.Contains("master")) {
-  dotnet pack ${bamboo.build.working.directory}/src/CommonUtilityLib.sln /p:Version=%PACKAGEVER% --configuration Release --no-build --include-source --include-symbols --output ${bamboo.build.working.directory}/publish
-} else {
-  dotnet pack ${bamboo.build.working.directory}/src/CommonUtilityLib.sln --version-suffix %PACKAGEVER% --configuration Release --no-build --include-source --include-symbols --output ${bamboo.build.working.directory}/publish
+public Iterator<EnvironmentPermissions> getPermissionList() {
+    List<EnvironmentPermissions> permissionList = new ArrayList<>();
+
+    for (EnvParams params : getPermissionEnv()) {
+        String envName = params.getEnvName().toString();
+        EnvironmentPermissions permissions = nonProdPermission(envName);
+        permissionList.add(permissions);
+    }
+
+    return permissionList.iterator();
 }
-cd ${bamboo.build.working.directory}/publish
-dotnet nuget push **/*.nupkg --source https://nuget.schwab.com/nuget/Default --api-key ${bamboo.api.key}
