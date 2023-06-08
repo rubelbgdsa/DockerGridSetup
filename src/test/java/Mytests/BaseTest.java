@@ -1,47 +1,20 @@
-package Mytests;
+public List<Environment> getStageList() {
+    List<EnvParams> paramsList = new ArrayList<>();
 
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.remote.RemoteWebDriver;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Parameters;
+    addEnvParams(paramsList, "development", getDevManifestYam1(), getDevAutoscaleUrl(), nonprodFoundations);
+    addEnvParams(paramsList, "qa", getQaManifestYam1(), getQaAutoscaleUrl1(), nonprodFoundations);
+    addEnvParams(paramsList, "pvs", getPvsManifestYam1(), getPvsAutoscaleUrl1(), nonprodFoundations);
+    addEnvParams(paramsList, "uat", getUatManifestYam1(), getUatAutoscaleUrl1(), nonprodFoundations);
+    addEnvParams(paramsList, "hen", getHenManifestYam1(), getHenAutoscaleUrl1(), nonprodFoundations);
+    addEnvParams(paramsList, "tb", getTbManifestYam1(), getTbAutoscaleUrl1(), nonprodFoundations);
+    addEnvParams(paramsList, "ty", getTyManifestYam1(), getTyAutoscaleUrl1(), nonprodFoundations);
+    addEnvParams(paramsList, "prod", getProdManifestYam1(), getProdAutoscaleUrl1(), prodFoundations);
 
-import java.net.MalformedURLException;
-import java.net.URL;
+    return getEnvList(paramsList);
+}
 
-public class BaseTest {
-	// Declare ThreadLocal Driver (ThreadLocalMap) for ThreadSafe Tests
-	protected static ThreadLocal<RemoteWebDriver> driver = new ThreadLocal<RemoteWebDriver>();
-
-	@BeforeMethod
-	@Parameters(value = { "browser" })
-	public void setupTest(String browser) throws MalformedURLException {
-		// Set DesiredCapabilities
-		DesiredCapabilities capabilities = new DesiredCapabilities();
-
-		// Set BrowserName
-		capabilities.setCapability("browserName", browser);
-
-		// Set the Hub url (Docker exposed hub URL)
-		driver.set(new RemoteWebDriver(new URL("http://54.90.55.73:4444/wd/hub"), capabilities));
-	}
-
-	public WebDriver getDriver() {
-		// Get driver from ThreadLocalMap
-		return driver.get();
-	}
-
-	@AfterMethod
-	public void tearDown() throws Exception {
-		getDriver().quit();
-	}
-
-	@AfterClass
-	void terminate() {
-		// Remove the ThreadLocalMap element
-		driver.remove();
-	}
-
+private void addEnvParams(List<EnvParams> paramsList, String name, String manifestYam1, String autoscaleUrl, String foundations) {
+    if (manifestYam1 != null && !manifestYam1.isEmpty()) {
+        paramsList.add(new EnvParams(name, "NonProd", name + "-ad00007195", false, foundations, autoscaleUrl, manifestYam1));
+    }
 }
