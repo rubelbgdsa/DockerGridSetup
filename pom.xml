@@ -1,24 +1,23 @@
-import java.util.List;
-import java.util.stream.Collectors;
-
-public List<EnvironmentPermissions> getPermissionList() {
-    return getPermissionEnv().stream()
-            .map(params -> {
-                String envName = params.getEnvName().toString().toUpperCase();
-                System.out.println("getPermissionList === " + envName);
-                return nonProdPermission(envName);
-            })
-            .collect(Collectors.toList());
+public Object createPermission(String objectType) {
+    switch (objectType) {
+        case "PlanPermission":
+            PlanPermissions planPermission = new PlanPermissions(
+                new PlanIdentifier(this.projectName, this.getPlan().getKey().toString()))
+                .permissions(new Permissions()
+                    .groupPermissions("BAM_AD00007195_DepEnv_CICD_Admins", PermissionType.VIEW,
+                        PermissionType.CLONE, PermissionType.ADMIN, PermissionType.EDIT, PermissionType.BUILD)
+                    .groupPermissions("BAM_AD00007195_DepEn_Journals_Non_Prod", PermissionType.VIEW)
+                    .groupPermissions("BAM_AD00007195_DepEnv_Journals_QA_UAT", PermissionType.VIEW, PermissionType.BUILD)
+                    .groupPermissions("BAM_Ad00007195_ViewProject", PermissionType.VIEW)
+                    .loggedInUserPermissions(PermissionType.VIEW));
+            return planPermission;
+        case "DeploymentPermission":
+            DeploymentPermission deploymentPermission = new DeploymentPermission(/* Initialization for DeploymentPermission */);
+            return deploymentPermission;
+        case "EnvironmentPermission":
+            EnvironmentPermission environmentPermission = new EnvironmentPermission(/* Initialization for EnvironmentPermission */);
+            return environmentPermission;
+        default:
+            throw new IllegalArgumentException("Invalid objectType: " + objectType);
+    }
 }
-
-    
-    
-List<EnvironmentPermissions> permissionsList = getPermissionList();
-for (EnvironmentPermissions permissions : permissionsList) {
-    // Handle each EnvironmentPermissions object
-}
-
-    
-    
-List<EnvironmentPermissions> permissionList = planspec.getPermissionList();
-Bambooserver.publish(permissionList);
